@@ -2,7 +2,7 @@ package programmers.hash.bestalbum;
 
 import java.util.Objects;
 
-public class Song {
+public class Song implements Comparable<Song> {
     private final int index;
     private final Genre genre;
     private final int playCount;
@@ -17,10 +17,6 @@ public class Song {
         this.playCount = playCount;
     }
 
-    public int comparePlayCount(Song other){
-        return Integer.compare(this.playCount, other.playCount);
-    }
-
     public int getIndex() {
         return index;
     }
@@ -31,6 +27,18 @@ public class Song {
 
     public int getPlayCount() {
         return playCount;
+    }
+
+    public boolean isMatchGenre(Genre genre) {
+        return genre.equals(this.genre);
+    }
+
+    @Override
+    public int compareTo(final Song other) {
+        if (this.playCount == other.playCount) {
+            return this.index - other.index;
+        }
+        return other.playCount - this.playCount;
     }
 
     @Override

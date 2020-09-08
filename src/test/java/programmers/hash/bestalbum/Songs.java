@@ -1,6 +1,8 @@
 package programmers.hash.bestalbum;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.*;
@@ -21,27 +23,16 @@ public class Songs {
     }
 
     public BestAlbum getBestAlbum() {
-        Map<Genre, List<Song>> songsByGenre = songs.stream()
-                .collect(groupingBy(Song::getGenre));
-
-        List<Genre> genreRank = getGenreRank(songsByGenre);
-
-        return new BestAlbum(genreRank.stream()
-                .collect(toMap(
-                        genre -> genre,
-                        genre -> BestAlbumTrack.from(songsByGenre.get(genre)),
-                        (x, y) -> y,
-                        LinkedHashMap::new)
-                ));
+        return songs.stream()
+                .collect(groupingBy(Song::getGenre))
+                .entrySet()
+                .stream()
+                .sorted((a, b) -> sumSongPlayCount(b.getValue()) - sumSongPlayCount(a.getValue()))
+                .map(entry -> BestAlbumTrack.from(entry.getKey(), entry.getValue()))
+                .collect(collectingAndThen(toList(), BestAlbum::new));
     }
 
-    private List<Genre> getGenreRank(final Map<Genre, List<Song>> songsByGenre) {
-        List<Genre> genres = new ArrayList<>(songsByGenre.keySet());
-        genres.sort((x, y) -> sumSongPlayCount(songsByGenre.get(y)).compareTo(sumSongPlayCount(songsByGenre.get(x))));
-        return genres;
-    }
-
-    private Integer sumSongPlayCount(List<Song> songs) {
+    private int sumSongPlayCount(List<Song> songs) {
         return songs.stream()
                 .map(Song::getPlayCount)
                 .reduce(Integer::sum)
