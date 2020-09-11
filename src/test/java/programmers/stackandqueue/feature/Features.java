@@ -33,16 +33,27 @@ public class Features {
 
     public int[] getDistributes() {
         List<Integer> distributes = new ArrayList<>();
-        for (int i = 0; i < features.size(); i++) {
-            progresses(features.getFirst().getRequiredDay());
+
+        while (!features.isEmpty()) {
+            int requiredDay = features.removeFirst().getRequiredDay();
+            int completeCount = 1;
+            while (true) {
+                if (features.isEmpty()) {
+                    distributes.add(completeCount);
+                    break;
+                }
+
+                if (features.getFirst().isComplete(requiredDay)) {
+                    features.removeFirst();
+                    completeCount++;
+                    continue;
+                }
+                distributes.add(completeCount);
+                break;
+            }
         }
-        return distributes
-                .stream()
+        return distributes.stream()
                 .mapToInt(Integer::intValue)
                 .toArray();
-    }
-
-    private void progresses(int day) {
-        features.forEach(feature -> feature.progress(day));
     }
 }
