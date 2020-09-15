@@ -3,20 +3,21 @@ package programmers.heap.spicy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Foods {
-    private final LinkedList<Food> foods;
+    private final PriorityQueue<Integer> foods;
 
     public static Foods from(int[] scoville) {
         return Arrays.stream(scoville)
                 .sorted()
-                .mapToObj(Food::new)
+                .boxed()
                 .collect(Collectors.collectingAndThen(toLinkedList(), Foods::new));
     }
 
-    private static Collector<Food, ?, LinkedList<Food>> toLinkedList() {
+    private static Collector<Integer, ?, LinkedList<Integer>> toLinkedList() {
         return Collector.of(LinkedList::new,
                 LinkedList::add,
                 (first, second) -> {
@@ -25,23 +26,19 @@ public class Foods {
                 });
     }
 
-
-    public Foods(final LinkedList<Food> foods) {
-        this.foods = new LinkedList<>(Collections.unmodifiableList(foods));
+    private Foods(final LinkedList<Integer> foods) {
+        this.foods = new PriorityQueue<>(Collections.unmodifiableList(foods));
     }
 
-    public int getMixCount(int targetScoville) {
-        LinkedList<Food> mixTarget = new LinkedList<>(foods);
+    int getMixCount(int targetScoville) {
         int count = 0;
-        while (!mixTarget.getFirst().biggerOrEqual(targetScoville)) {
-            if (mixTarget.size() < 2) {
+        while (foods.peek() < targetScoville) {
+            if (foods.size() < 2) {
                 return -1;
             }
-            Food first = mixTarget.removeFirst();
-            Food second = mixTarget.removeFirst();
-            Food mixedFood = first.mix(second);
-            mixTarget.addFirst(mixedFood);
-            mixTarget.sort(Food::compareTo);
+            Integer first = foods.poll();
+            Integer second = foods.poll();
+            foods.add(first + (second * 2));
             count++;
         }
         return count;
