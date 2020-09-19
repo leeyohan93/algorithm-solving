@@ -2,15 +2,15 @@ package programmers.heap.disk;
 
 import java.util.*;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Tasks {
     private final LinkedList<Task> tasks;
 
     public static Tasks form(final int[][] jobs) {
-        LinkedList<Task> tasks = Arrays.stream(jobs)
-                .map(job -> new Task(job[0], job[1]))
-                .sorted()
+        LinkedList<Task> tasks = IntStream.range(0, jobs.length)
+                .mapToObj(index -> new Task(index, jobs[index][0], jobs[index][1]))
+                .sorted(Comparator.comparingInt(Task::getInputTime))
                 .collect(toLinkedList());
         return new Tasks(tasks);
     }
@@ -30,19 +30,43 @@ public class Tasks {
 
     public int getAverageTime() {
         List<Integer> completedTimes = new ArrayList<>();
-        Task firstTask = tasks.removeFirst();
-        int nextTime = firstTask.getWaitAndRunTime();
-        completedTimes.add(nextTime);
+        int completedTime = 0;
         while (!tasks.isEmpty()) {
-            final int finalNextTime = nextTime;
-            tasks.sort(Comparator.comparingInt(o -> o.comparePriority(finalNextTime)));
-            Task task = tasks.removeFirst();
-            int waitAndRunTime = task.getWaitAndRunTime(nextTime);
+            final int nextStartTime = completedTime;
+            Task activeTask = getActiveTask(nextStartTime);
+            if (activeTask.getInputTime() > nextStartTime) {
+                completedTime = activeTask.getInputTime();
+            }
+
+            int waitAndRunTime = activeTask.getWaitAndRunTime(completedTime);
             completedTimes.add(waitAndRunTime);
-            nextTime = task.getInputTime() + waitAndRunTime;
+            completedTime += activeTask.getRunTime();
         }
         return completedTimes.stream()
                 .mapToInt(Integer::intValue)
                 .sum() / completedTimes.size();
+    }
+
+    private Task getActiveTask(final int nextStartTime) {
+        Task activeTask = tasks.stream()
+                .filter(task -> task.readyToStart(nextStartTime))
+                .sorted()
+                .findFirst()
+                .orElseGet(this::getActiveTask);
+
+        if (tasks.remove(activeTask)) {
+            return activeTask;
+        }
+
+        throw new IllegalArgumentException();
+    }
+
+    private Task getActiveTask() {
+        int inputTime = tasks.getFirst().getInputTime();
+        return tasks.stream()
+                .filter(task -> task.readyToStart(inputTime))
+                .sorted()
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 }

@@ -1,16 +1,16 @@
 package programmers.heap.disk;
 
+import java.util.Objects;
+
 public class Task implements Comparable<Task> {
+    private final int index;
     private final int inputTime;
     private final int runTime;
 
-    public Task(final int inputTime, final int runTime) {
+    public Task(final int index, final int inputTime, final int runTime) {
+        this.index = index;
         this.inputTime = inputTime;
         this.runTime = runTime;
-    }
-
-    public int getInputTime() {
-        return inputTime;
     }
 
     public int getWaitAndRunTime() {
@@ -18,21 +18,40 @@ public class Task implements Comparable<Task> {
     }
 
     public int getWaitAndRunTime(int startTime) {
-        if (startTime >= inputTime) {
-            return (startTime - inputTime) + runTime;
+        if (inputTime > startTime) {
+            throw new IllegalArgumentException();
         }
-        return 0;
+
+        return (startTime - inputTime) + runTime;
     }
 
-    public int comparePriority(int startTime) {
-        if (startTime >= inputTime) {
-            return runTime;
-        }
-        return 100000;
+    public int getRunTime() {
+        return runTime;
+    }
+
+    public int getInputTime() {
+        return inputTime;
+    }
+
+    public boolean readyToStart(int time) {
+        return time >= inputTime;
     }
 
     @Override
     public int compareTo(final Task other) {
-        return this.inputTime - other.inputTime;
+        return this.runTime - other.runTime;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        final Task task = (Task) o;
+        return index == task.index;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(index);
     }
 }
