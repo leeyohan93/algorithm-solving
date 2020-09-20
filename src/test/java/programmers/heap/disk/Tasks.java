@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 public class Tasks {
     private final LinkedList<Task> tasks;
 
-    public static Tasks form(final int[][] jobs) {
+    static Tasks form(final int[][] jobs) {
         LinkedList<Task> tasks = IntStream.range(0, jobs.length)
                 .mapToObj(index -> new Task(index, jobs[index][0], jobs[index][1]))
                 .sorted(Comparator.comparingInt(Task::getInputTime))

@@ -7,17 +7,13 @@ public class Task implements Comparable<Task> {
     private final int inputTime;
     private final int runTime;
 
-    public Task(final int index, final int inputTime, final int runTime) {
+    Task(final int index, final int inputTime, final int runTime) {
         this.index = index;
         this.inputTime = inputTime;
         this.runTime = runTime;
     }
 
-    public int getWaitAndRunTime() {
-        return getWaitAndRunTime(inputTime);
-    }
-
-    public int getWaitAndRunTime(int startTime) {
+    int getWaitAndRunTime(int startTime) {
         if (inputTime > startTime) {
             throw new IllegalArgumentException();
         }
@@ -25,15 +21,15 @@ public class Task implements Comparable<Task> {
         return (startTime - inputTime) + runTime;
     }
 
-    public int getRunTime() {
+    int getRunTime() {
         return runTime;
     }
 
-    public int getInputTime() {
+    int getInputTime() {
         return inputTime;
     }
 
-    public boolean readyToStart(int time) {
+    boolean readyToStart(int time) {
         return time >= inputTime;
     }
 
