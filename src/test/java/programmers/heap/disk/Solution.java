@@ -11,7 +11,6 @@ public class Solution {
         int[][] jobs = {{3, 3}, {4, 3}, {10, 3}};
         Tasks tasks = Tasks.form(jobs);
         int averageTime = tasks.getAverageTime();
-
         assertThat(averageTime).isEqualTo(3);
     }
 }
