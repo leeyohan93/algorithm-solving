@@ -2,11 +2,11 @@ package programmers.sort.bignumber;
 
 import org.junit.jupiter.api.Test;
 
-public class Soluction {
+public class Solution {
 
     @Test
     void solve() {
-        int[] numbers = {3, 9, 34, 5, 30};
+        int[] numbers = {131, 13,33};
         AppendNumbers appendNumbers = AppendNumbers.from(numbers);
         String appendedNumber = appendNumbers.append();
 

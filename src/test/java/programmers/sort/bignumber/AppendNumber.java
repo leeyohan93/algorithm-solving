@@ -2,38 +2,19 @@ package programmers.sort.bignumber;
 
 import java.util.Objects;
 
-public class AppendNumber implements Comparable<AppendNumber> {
+public class AppendNumber {
     private final int number;
+
+    public AppendNumber(final String number) {
+        this.number = Integer.parseInt(number);
+    }
 
     public AppendNumber(final int number) {
         this.number = number;
     }
 
-    private int getNumber(final int numberIndex) {
-        String numberString = String.valueOf(number);
-        if (isLengthOver(numberIndex)) {
-            return Integer.parseInt(numberString.substring(numberIndex - 1, numberIndex));
-        }
-        return Integer.parseInt(numberString.substring(numberIndex, numberIndex + 1));
-    }
-
-    public boolean isLengthOver(int numberIndex) {
-        return numberIndex > String.valueOf(number).length() - 1;
-    }
-
-    @Override
-    public int compareTo(final AppendNumber other) {
-        if (this.equals(other)) {
-            return 0;
-        }
-
-        int result = 0;
-        int numberIndex = 0;
-        while (result == 0) {
-            result = other.getNumber(numberIndex) - getNumber(numberIndex);
-            numberIndex++;
-        }
-        return result;
+    public AppendNumber append(final AppendNumber other) {
+        return new AppendNumber(number + String.valueOf(other.number));
     }
 
     @Override
@@ -52,5 +33,9 @@ public class AppendNumber implements Comparable<AppendNumber> {
     @Override
     public int hashCode() {
         return Objects.hash(number);
+    }
+
+    public int minus(final AppendNumber other) {
+        return this.number - other.number;
     }
 }

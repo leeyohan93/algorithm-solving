@@ -12,7 +12,6 @@ public class AppendNumbers {
     public static AppendNumbers from(int[] numbers) {
         return Arrays.stream(numbers)
                 .mapToObj(AppendNumber::new)
-                .sorted()
                 .collect(Collectors.collectingAndThen(Collectors.toList(), AppendNumbers::new));
     }
 
@@ -21,9 +20,16 @@ public class AppendNumbers {
     }
 
     public String append() {
-        return appendNumbers.stream()
+        appendNumbers.sort((a, b) -> -a.append(b).minus(b.append(a)));
+
+        String appendedNumber = appendNumbers.stream()
                 .map(AppendNumber::toString)
                 .reduce((a, b) -> a + b)
                 .orElse("");
+
+        if (appendedNumber.charAt(0) == '0') {
+            return "0";
+        }
+        return appendedNumber;
     }
 }
