@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Solution {
+public class DfsSolution {
 
     @Test
     void solve() {
