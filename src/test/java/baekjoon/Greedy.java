@@ -1,8 +1,30 @@
 package baekjoon;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Greedy {
+
+    // https://www.acmicpc.net/problem/2839
+    public static void 설탕_배달() throws IOException {
+        // given
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer tokenizer = new StringTokenizer(bufferedReader.readLine());
+        int input = Integer.parseInt(tokenizer.nextToken());
+
+        // when
+        if (input == 4 || input == 7) {
+            System.out.println(-1);
+        } else if (input % 5 == 0) {
+            System.out.println(input / 5);
+        } else if (input % 5 == 1 || input % 5 == 3) {
+            System.out.println((input / 5) + 1);
+        } else if (input % 5 == 2 || input % 5 == 4) {
+            System.out.println((input / 5) + 2);
+        }
+    }
 
     // https://www.acmicpc.net/problem/11047
     public static void 동전_0(Scanner scanner) {
@@ -65,11 +87,11 @@ public class Greedy {
 
         // when
         int sum = 0;
-        int preNumber = 0;
+        int preinputumber = 0;
         for (Integer number : numbers) {
-            int total = number + preNumber;
+            int total = number + preinputumber;
             sum += total;
-            preNumber = total;
+            preinputumber = total;
         }
 
         // then
@@ -85,8 +107,8 @@ public class Greedy {
         String[] split = input.split("-");
 
         int result = 0;
-        String[] plusNumbers = split[0].split("\\+");
-        for (String number : plusNumbers) {
+        String[] plusinputumbers = split[0].split("\\+");
+        for (String number : plusinputumbers) {
             result += Integer.parseInt(number);
         }
 
