@@ -152,6 +152,23 @@ public class Greedy {
         System.out.println(price);
     }
 
+    public static void 거스름돈() throws IOException {
+        // given
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        int input = 1000 - Integer.parseInt(bufferedReader.readLine());
+        List<Integer> coins = Arrays.asList(500, 100, 50, 10, 5, 1);
+
+        // when
+        int count = 0;
+        for (Integer coin : coins) {
+            count += input / coin;
+            input %= coin;
+        }
+
+        // then
+        System.out.println(count);
+    }
+
     public static class Conference {
 
         private int startTime;

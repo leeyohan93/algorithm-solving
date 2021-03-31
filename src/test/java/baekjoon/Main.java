@@ -13,6 +13,7 @@ public class Main {
 //        Greedy.atm(scanner);
 //        Greedy.잃어버린_괄호(scanner);
 //        Greedy.주유소(scanner);
-        Greedy.설탕_배달();
+//        Greedy.설탕_배달();
+        Greedy.거스름돈();
     }
 }
